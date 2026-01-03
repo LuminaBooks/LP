@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Books - EBooks Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0F0F1E 0%, #1A1A2E 100%);
+            color: #F5F5F0;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(201, 168, 106, 0.2);
+            padding: 1.5rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(26, 26, 46, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            border: 3px solid #C9A86A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+            background: rgba(201, 168, 106, 0.1);
+        }
+
+        .logo-icon svg {
+            transform: rotate(-45deg);
+            width: 24px;
+            height: 24px;
+            stroke: #C9A86A;
+            fill: none;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-name {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: #E8DCC4;
+            letter-spacing: 0.1em;
+        }
+
+        .logo-subtitle {
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            color: #C9A86A;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #E8DCC4;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #C9A86A;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #C9A86A;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #C9A86A;
+            transition: all 0.3s ease;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(201, 168, 106, 0.1) 2px, rgba(201, 168, 106, 0.1) 4px);
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(201, 168, 106, 0.1);
+            border: 1px solid rgba(201, 168, 106, 0.3);
+            border-radius: 50px;
+            color: #C9A86A;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #C9A86A 0%, #E8DCC4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #E8DCC4;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            opacity: 0.95;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.8s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #C9A86A 0%, #B89858 100%);
+            color: #1A1A2E;
+            box-shadow: 0 8px 20px rgba(201, 168, 106, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(201, 168, 106, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #E8DCC4;
+            border: 2px solid rgba(201, 168, 106, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(201, 168, 106, 0.1);
+            border-color: #C9A86A;
+        }
+
+        .features {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            color: #C9A86A;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: #E8DCC4;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(201, 168, 106, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #C9A86A;
+            box-shadow: 0 12px 30px rgba(201, 168, 106, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #C9A86A 0%, #B89858 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon svg {
+            width: 30px;
+            height: 30px;
+            stroke: #1A1A2E;
+            fill: none;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #E8DCC4;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #E8DCC4;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        .books {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #1A1A2E 0%, #0F0F1E 100%);
+        }
+
+        .books-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .book-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #C9A86A 0%, #B89858 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .book-cover-header {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: #1A1A2E;
+            font-weight: 600;
+        }
+
+        .book-cover-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1A1A2E;
+            line-height: 1.3;
+        }
+
+        .book-cover-author {
+            font-size: 0.95rem;
+            color: #1A1A2E;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .book-info h4 {
+            color: #C9A86A;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-info p {
+            color: #E8DCC4;
+            opacity: 0.85;
+            font-size: 0.9rem;
+        }
+
+        .cta-section {
+            padding: 6rem 2rem;
+            background: rgba(201, 168, 106, 0.05);
+            border-top: 1px solid rgba(201, 168, 106, 0.2);
+            border-bottom: 1px solid rgba(201, 168, 106, 0.2);
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            color: #C9A86A;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            color: #E8DCC4;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .newsletter {
+            padding: 6rem 2rem;
+        }
+
+        .newsletter-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .newsletter h2 {
+            font-size: 2.5rem;
+            color: #C9A86A;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter p {
+            font-size: 1.1rem;
+            color: #E8DCC4;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 2px solid rgba(201, 168, 106, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #E8DCC4;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: #C9A86A;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(232, 220, 196, 0.5);
+        }
+
+        footer {
+            background: rgba(15, 15, 30, 0.8);
+            border-top: 1px solid rgba(201, 168, 106, 0.2);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            color: #C9A86A;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #E8DCC4;
+            opacity: 0.85;
+            line-height: 1.8;
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #C9A86A;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(201, 168, 106, 0.1);
+            color: #E8DCC4;
+            opacity: 0.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(201, 168, 106, 0.1);
+            border: 1px solid rgba(201, 168, 106, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(201, 168, 106, 0.2);
+            border-color: #C9A86A;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(26, 26, 46, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-name">LUMINA</div>
+                    <div class="logo-subtitle">BOOK</div>
+                </div>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Início</a></li>
+                <li><a href="#features">Diferenciais</a></li>
+                <li><a href="#books">Catálogo</a></li>
+                <li><a href="#newsletter">Newsletter</a></li>
+                <li><a href="#contact">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">✨ CONTEÚDO PREMIUM</div>
+            <h1>EBooks de Alto Padrão para Leitores Exigentes</h1>
+            <p>Descubra uma curadoria exclusiva de livros digitais com qualidade editorial excepcional. Conhecimento que transforma, em formato premium.</p>
+            <div class="cta-buttons">
+                <a href="#books" class="btn btn-primary">Explorar Catálogo</a>
+                <a href="#newsletter" class="btn btn-secondary">Receber Novidades</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-title">
+                <h2>Por que Escolher Lumina Book?</h2>
+                <p>Excelência em cada página, experiência premium em cada leitura</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </div>
+                    <h3>Curadoria Exclusiva</h3>
+                    <p>Cada título passa por rigorosa seleção editorial. Apenas conteúdo excepcional que agrega valor real.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <h3>Formatação Impecável</h3>
+                    <p>Design tipográfico profissional, diagramação premium e navegação intuitiva para experiência de leitura superior.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>Autores Renomados</h3>
+                    <p>Trabalhamos com especialistas e autoridades em suas áreas. Conhecimento validado e confiável.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Acesso Instantâneo</h3>
+                    <p>Compre e receba imediatamente. Leia em qualquer dispositivo, a qualquer hora, onde estiver.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3>Atualizações Gratuitas</h3>
+                    <p>Novas edições e conteúdos extras sem custo adicional. Seu investimento se valoriza com o tempo.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Garantia de Qualidade</h3>
+                    <p>Satisfação garantida ou seu dinheiro de volta. Confiamos na qualidade do nosso conteúdo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="books" id="books">
+        <div class="books-container">
+            <div class="section-title">
+                <h2>Destaques do Catálogo</h2>
+                <p>Conteúdo transformador selecionado para você</p>
+            </div>
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <div class="book-cover-header">LUMINA BOOK</div>
+                        <div class="book-cover-title">Estratégias de Crescimento Digital</div>
+                        <div class="book-cover-author">Maria Silva</div>
+                    </div>
+                    <div class="book-info">
+                        <h4>Marketing • Negócios</h4>
+                        <p>Domine as principais estratégias para escalar seu negócio no ambiente digital.</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <div class="book-cover-header">LUMINA BOOK</div>
+                        <div class="book-cover-title">Mindfulness e Produtividade</div>
+                        <div class="book-cover-author">Dr. João Santos</div>
+                    </div>
+                    <div class="book-info">
+                        <h4>Desenvolvimento Pessoal</h4>
+                        <p>Técnicas comprovadas para alcançar alta performance com equilíbrio e bem-estar.</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <div class="book-cover-header">LUMINA BOOK</div>
+                        <div class="book-cover-title">Inteligência Financeira</div>
+                        <div class="book-cover-author">Carlos Mendes</div>
+                    </div>
+                    <div class="book-info">
+                        <h4>Finanças • Investimentos</h4>
+                        <p>Construa riqueza sustentável com estratégias inteligentes de investimento.</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">
+                        <div class="book-cover-header">LUMINA BOOK</div>
+                        <div class="book-cover-title">Liderança Transformadora</div>
+                        <div class="book-cover-author">Ana Costa</div>
+                    </div>
+                    <div class="book-info">
+                        <h4>Gestão • Liderança</h4>
+                        <p>Desenvolva habilidades para inspirar equipes e gerar resultados extraordinários.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Pronto para Transformar seu Conhecimento?</h2>
+            <p>Junte-se a milhares de leitores que já elevaram seu nível com nossos eBooks premium.</p>
+            <div class="cta-buttons">
+                <a href="#books" class="btn btn-primary">Ver Todos os Títulos</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter" id="newsletter">
+        <div class="newsletter-container">
+            <h2>Receba Novidades Exclusivas</h2>
+            <p>Inscreva-se e seja o primeiro a saber sobre novos lançamentos, ofertas especiais e conteúdos exclusivos.</p>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" class="newsletter-input" placeholder="Seu melhor e-mail" required>
+                <button type="submit" class="btn btn-primary">Inscrever-se</button>
+            </form>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre Lumina Book</h3>
+                <p>Editora digital especializada em eBooks premium de alta qualidade. Levamos conhecimento transformador aos leitores mais exigentes.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <a href="#home">Início</a>
+                <a href="#features">Diferenciais</a>
+                <a href="#books">Catálogo</a>
+                <a href="#newsletter">Newsletter</a>
+            </div>
+            <div class="footer-section">
+                <h3>Categorias</h3>
+                <a href="#">Negócios</a>
+                <a href="#">Desenvolvimento Pessoal</a>
+                <a href="#">Tecnologia</a>
+                <a href="#">Finanças</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p>luminabooks@outlook.com</p>
+                <p>suporte.luminabooks@outlook.com</p>
+                <p>WhatsApp: +55 (11) 9999-9999</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Lumina Book. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        const newsletterForm = document.getElementById('newsletterForm');
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input').value;
+            alert('Obrigado por se inscrever! Você receberá novidades em: ' + email);
+            newsletterForm.reset();
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .book-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
